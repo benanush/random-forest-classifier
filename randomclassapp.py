@@ -24,11 +24,15 @@ st.write("This app predicts survival using a Random Forest model.")
 @st.cache_resource
 def load_and_train():
     try:
-        df = pd.read_csv("https://github.com/benanush/random-forest-classifier/blob/main/titanic.csv")
-        df.columns = df.columns.str.lower()
-    except FileNotFoundError:
-        st.error("❌ titanic.csv not found. Upload it to the GitHub repo.")
+        df = pd.read_csv(
+            "https://raw.githubusercontent.com/benanush/random-forest-classifier/main/titanic.csv"
+        )
+    except Exception as e:
+        st.error(f"❌ Failed to load dataset: {e}")
         st.stop()
+
+    # Normalize column names
+    df.columns = df.columns.str.lower()
 
     required_cols = ['p_class', 'sex', 'age', 'sib_sp', 'parch', 'fare', 'survived']
 
@@ -36,9 +40,10 @@ def load_and_train():
         df = df[required_cols].dropna()
     except KeyError as e:
         st.error(f"❌ Column mismatch: {e}")
-        st.info(f"CSV columns: {df.columns.tolist()}")
+        st.info(f"CSV columns found: {df.columns.tolist()}")
         st.stop()
 
+    # Encode categorical data
     le = LabelEncoder()
     df['sex'] = le.fit_transform(df['sex'])
 
@@ -81,10 +86,10 @@ if st.sidebar.button("Predict Survival"):
     st.divider()
     if prediction[0] == 1:
         st.success("### ✅ Survived")
-        st.write(f"Confidence: **{probability[0][1]*100:.2f}%**")
+        st.write(f"Confidence: **{probability[0][1] * 100:.2f}%**")
     else:
         st.error("### ❌ Did Not Survive")
-        st.write(f"Confidence: **{probability[0][0]*100:.2f}%**")
+        st.write(f"Confidence: **{probability[0][0] * 100:.2f}%**")
 
 # -----------------------------
 # Visualizations
@@ -114,9 +119,3 @@ with col2:
     ax2.set_ylabel("")
     ax2.set_title("Survival Distribution")
     st.pyplot(fig2)
-
-
-
-
-
-
