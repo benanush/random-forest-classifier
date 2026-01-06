@@ -63,6 +63,56 @@ p_class = st.sidebar.selectbox("Ticket Class", [1, 2, 3])
 sex_str = st.sidebar.radio("Gender", ['male', 'female'])
 age = st.sidebar.slider("Age", 1, 80, 30)
 sib_sp = st.sidebar.number_input("Siblings / Spouses", 0, 8, 0)
-parch = st.sidebar.number_input("Parents / Children"_
+parch = st.sidebar.number_input("Parents / Children", 0, 6, 0)
+fare = st.sidebar.slider("Fare Paid", 0.0, 500.0, 30.0)
+
+sex_encoded = le.transform([sex_str])[0]
+
+input_data = np.array([[p_class, sex_encoded, age, sib_sp, parch, fare]])
+
+# -----------------------------
+# Prediction
+# -----------------------------
+if st.sidebar.button("Predict Survival"):
+    prediction = model.predict(input_data)
+    probability = model.predict_proba(input_data)
+
+    st.divider()
+    if prediction[0] == 1:
+        st.success("### ✅ Survived")
+        st.write(f"Confidence: **{probability[0][1]*100:.2f}%**")
+    else:
+        st.error("### ❌ Did Not Survive")
+        st.write(f"Confidence: **{probability[0][0]*100:.2f}%**")
+
+# -----------------------------
+# Visualizations
+# -----------------------------
+st.divider()
+st.subheader("📊 Dataset Insights")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    fig, ax = plt.subplots()
+    sns.barplot(
+        x=model.feature_importances_,
+        y=['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare'],
+        ax=ax
+    )
+    ax.set_title("Feature Importance")
+    st.pyplot(fig)
+
+with col2:
+    fig2, ax2 = plt.subplots()
+    dataframe['survived'].value_counts().plot.pie(
+        autopct='%1.1f%%',
+        labels=['Did Not Survive', 'Survived'],
+        ax=ax2
+    )
+    ax2.set_ylabel("")
+    ax2.set_title("Survival Distribution")
+    st.pyplot(fig2)
+
 
 
