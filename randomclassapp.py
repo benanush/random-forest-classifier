@@ -24,7 +24,7 @@ st.write("This app predicts survival using a Random Forest model.")
 @st.cache_resource
 def load_and_train():
     try:
-        df = pd.read_csv("titanic.csv")  # ✅ RELATIVE PATH
+        df = pd.read_csv("C:\Users\benan\Documents\Data_Scientist\Streamlit\titanic.csv")  # ✅ RELATIVE PATH
     except FileNotFoundError:
         st.error("❌ titanic.csv not found. Upload it to the GitHub repo.")
         st.stop()
@@ -64,3 +64,4 @@ sex_str = st.sidebar.radio("Gender", ['male', 'female'])
 age = st.sidebar.slider("Age", 1, 80, 30)
 sib_sp = st.sidebar.number_input("Siblings / Spouses", 0, 8, 0)
 parch = st.sidebar.number_input("Parents / Children"_
+
