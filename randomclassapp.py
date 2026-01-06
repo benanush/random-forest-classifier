@@ -24,7 +24,7 @@ st.write("This app predicts survival using a Random Forest model.")
 @st.cache_resource
 def load_and_train():
     try:
-        df = pd.read_csv("")
+        df = pd.read_csv("https://github.com/benanush/random-forest-classifier/blob/main/titanic.csv")
         df.columns = df.columns.str.lower()
     except FileNotFoundError:
         st.error("❌ titanic.csv not found. Upload it to the GitHub repo.")
@@ -114,6 +114,7 @@ with col2:
     ax2.set_ylabel("")
     ax2.set_title("Survival Distribution")
     st.pyplot(fig2)
+
 
 
 
